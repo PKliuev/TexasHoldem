@@ -78,21 +78,7 @@ void sort_hand(std::vector<Card> &hand){
 
 bool check_flush(const std::vector<Card> &pool){
     
-    std::vector<Card>::const_iterator it1;
-    Suit suit;
-    suit = (pool.begin())->get_suit();
-
-    for (it1 = pool.begin() + 1; it1 != pool.end(); it1++){
-
-        if(it1->get_suit() != suit){
-
-            return false;
-
-        };
-
-    };
-
-    return true;
+    return 0;
 
 
 };
