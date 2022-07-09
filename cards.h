@@ -64,10 +64,10 @@ class Deck{
 void shuffle_deck(std::vector<Card> &deck);
 void show_deck(const std::vector<Card> &deck);
 
-bool compare_cards(Card card1, Card card2);
+bool compare_rank(Card card1, Card card2);
 
-void sort_hand(std::vector<Card> &hand);
+bool compare_suit(Card card1, Card card2);
 
-bool check_flush(const std::vector<Card> &pool); 
+bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand); 
 bool check_straight(const std::vector<Card> &pool);
 #endif

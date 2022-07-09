@@ -1,5 +1,6 @@
 #include "cards.h"
-
+#define HAND_SIZE  5
+#define POOL_SIZE  7
 Rank Card::get_rank() const {return rank;};
 Suit Card::get_suit() const {return suit;};
 
@@ -62,25 +63,66 @@ void show_deck(const std::vector<Card> &deck) {
 
 };
 
-bool compare_cards(Card card1, Card card2){
+bool compare_rank(Card card1, Card card2){
 
     return (static_cast<int>(card1.get_rank()) <
             static_cast<int>(card2.get_rank()));
 
 };
 
-void sort_hand(std::vector<Card> &hand){
+bool compare_suit(Card card1, Card card2){
 
-    std::sort(hand.begin(), hand.end(), compare_cards);
+    return (static_cast<int>(card1.get_suit()) <
+            static_cast<int>(card2.get_suit()));
+  
 
 }
 
 
-bool check_flush(const std::vector<Card> &pool){
+bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
     
+    std::vector<Card> poolcpy = pool;
+    std::vector<Card>::iterator it1;
+    int cntr = 1;
+
+    sort(poolcpy.begin(),poolcpy.end(),compare_suit);
+
+    it1 = poolcpy.begin();
+
+    while(it1 != poolcpy.end()){
+
+        if(it1->get_suit() == (it1+1)->get_suit()){
+
+            cntr++;
+            
+        }
+        else{
+
+            if(cntr >= HAND_SIZE){
+
+                copy(it1 - HAND_SIZE + 1, it1 + 1, std::back_inserter(hand));
+                return 1;
+            }
+            else{
+
+                cntr = 1;
+
+                if(it1 - poolcpy.begin() > 2){
+
+                    return 0;
+
+                }
+
+            }
+
+        }
+
+        it1++;
+
+    }
+
     return 0;
-
-
+    
 };
 
 // доделать когда соображу сортировку enum
