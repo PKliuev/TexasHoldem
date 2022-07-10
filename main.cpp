@@ -35,7 +35,7 @@ int main(){
 
     std::cout << std::endl;
 
-    std::cout << check_straight(hand,comb) << std::endl;
+    std::cout << check_flush(hand,comb) << std::endl;
 
     for(iter = comb.begin(); iter != comb.end(); iter++){
 

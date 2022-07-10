@@ -80,37 +80,41 @@ bool compare_suit(Card card1, Card card2){
 
 bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
     
-    std::vector<Card> poolcpy = pool;
-    std::vector<Card>::iterator it1;
+    auto poolcpy = pool;
     int cntr = 1;
 
     sort(poolcpy.begin(),poolcpy.end(),compare_suit);
 
-    it1 = poolcpy.begin();
+    auto it1 = poolcpy.begin();
+    hand.emplace_back(it1->get_suit(), it1->get_rank());
 
     while(it1 != poolcpy.end()){
 
-        if(it1->get_suit() == (it1+1)->get_suit()){
+        if (it1->get_suit() == (it1 + 1)->get_suit()){
 
+            hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
             cntr++;
-            
+
         }
         else{
 
-            if(cntr >= HAND_SIZE){
+            if( cntr >= HAND_SIZE){
 
-                copy(it1 - HAND_SIZE + 1, it1 + 1, std::back_inserter(hand));
                 return 1;
+
             }
             else{
 
-                cntr = 1;
+                hand.clear();
 
-                if(it1 - poolcpy.begin() > 2){
+                if ( (it1 - poolcpy.begin()) > 2){
 
                     return 0;
 
                 }
+                
+                hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+                cntr = 1;
 
             }
 
@@ -118,9 +122,19 @@ bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
 
         it1++;
 
+        
     }
 
-    return 0;
+if(cntr >= HAND_SIZE){
+
+            return 1;
+
+        }
+        else{
+
+            return 0;
+
+        };
     
 };
 
