@@ -6,7 +6,21 @@ int main(){
     std::vector<Card> hand, comb;
     std::vector<Card>::iterator iter;
 
-    for(int i = 0 ; i < 7 ; i++){
+    Card card1(Suit::Clubs,Rank::Ace);
+    hand.push_back(card1);
+    Card card2(Suit::Clubs,Rank::King);
+    hand.push_back(card2);
+    Card card3(Suit::Clubs,Rank::Queen);
+    hand.push_back(card3);
+    Card card4(Suit::Clubs,Rank::Jack);
+    hand.push_back(card4);
+    Card card5(Suit::Clubs,Rank::Ten);
+    hand.push_back(card5);
+
+
+
+
+    for(int i = 0 ; i < 2 ; i++){
 
         hand.push_back(deck.deal());
 
@@ -21,7 +35,7 @@ int main(){
 
     std::cout << std::endl;
 
-    std::cout << check_flush(hand,comb) << std::endl;
+    std::cout << check_straight(hand,comb) << std::endl;
 
     for(iter = comb.begin(); iter != comb.end(); iter++){
 

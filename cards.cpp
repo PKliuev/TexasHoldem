@@ -1,6 +1,5 @@
 #include "cards.h"
-#define HAND_SIZE  5
-#define POOL_SIZE  7
+
 Rank Card::get_rank() const {return rank;};
 Suit Card::get_suit() const {return suit;};
 
@@ -125,9 +124,81 @@ bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
     
 };
 
-// доделать когда соображу сортировку enum
-bool check_straight(const std::vector<Card> &pool){
+bool check_straight(const std::vector<Card> &pool, std::vector<Card> &hand){
 
-return 0;
+    std::vector<Card> poolcpy = pool;
+    std::vector<Card>::iterator it1;
+    int virtPool = 0;
+    int cntr = 1;
+    
+    sort(poolcpy.begin(),poolcpy.end(),compare_rank);
+
+    it1 = poolcpy.begin();
+
+    if(it1->get_rank() == Rank::Ace){
+
+        poolcpy.emplace_back(it1->get_suit(),it1->get_rank());
+        virtPool++;
+    }
+
+        for(it1 = poolcpy.begin() ; it1 != poolcpy.end() ; it1++){
+
+        std::cout << RankMap.at(it1->get_rank()) << std::endl;
+
+    }
+
+    it1 = poolcpy.begin();
+
+    hand.emplace_back(it1->get_suit(),it1->get_rank());
+
+    while(it1 != poolcpy.end() - 1){
+    
+        if(static_cast<int>((it1+1)->get_rank()) - static_cast<int>(it1->get_rank()) <= 1){
+
+            hand.emplace_back((it1+1)->get_suit(),(it1+1)->get_rank());
+
+            if(static_cast<int>((it1+1)->get_rank()) - static_cast<int>(it1->get_rank()) == 1){
+
+                cntr++;
+
+            };
+
+        }
+        else{
+
+            if(cntr >= HAND_SIZE){
+
+                return 1;
+
+            }
+            else{
+
+                hand.clear();
+                if ( (it1 - poolcpy.begin()) > (2 + virtPool) ){
+
+                    return 0;
+
+                }
+                hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+                cntr = 1;
+
+            }
+
+        }
+
+        it1++;
+    }
+
+    if (cntr >= HAND_SIZE){
+
+        return 1;
+
+    }else{
+
+        return 0;
+
+    }
+
 
 };
+   

@@ -1,7 +1,8 @@
 #pragma once
 #ifndef CARDS_H
 #define CARDS_H
-
+#define HAND_SIZE  5
+#define POOL_SIZE  7
 #include "libs.h"
 
 enum class Suit {Diamonds,Clubs,Hearts,Spades};
@@ -69,5 +70,5 @@ bool compare_rank(Card card1, Card card2);
 bool compare_suit(Card card1, Card card2);
 
 bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand); 
-bool check_straight(const std::vector<Card> &pool);
+bool check_straight(const std::vector<Card> &pool,std::vector<Card> &hand);
 #endif
