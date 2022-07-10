@@ -69,6 +69,9 @@ bool compare_rank(Card card1, Card card2);
 
 bool compare_suit(Card card1, Card card2);
 
+std::ostream& operator<< (std::ostream& os, Suit const suit);
+std::ostream& operator<< (std::ostream& os, Rank const rank);
+
 bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand); 
 bool check_straight(const std::vector<Card> &pool,std::vector<Card> &hand);
 #endif

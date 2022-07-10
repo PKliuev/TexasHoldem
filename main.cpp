@@ -28,8 +28,8 @@ int main(){
 
     for(iter = hand.begin(); iter != hand.end(); iter++){
 
-        std::cout << RankMap.at(iter->get_rank()) << " of " <<
-         SuitMap.at(iter->get_suit()) << std::endl;
+        std::cout << iter->get_rank() << " of " <<
+         iter->get_suit() << std::endl;
 
     }
 

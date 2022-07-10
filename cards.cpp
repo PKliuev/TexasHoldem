@@ -69,6 +69,7 @@ bool compare_rank(Card card1, Card card2){
 
 };
 
+
 bool compare_suit(Card card1, Card card2){
 
     return (static_cast<int>(card1.get_suit()) <
@@ -76,6 +77,22 @@ bool compare_suit(Card card1, Card card2){
   
 
 }
+
+std::ostream& operator<< (std::ostream& os, Suit const suit){
+
+    os << SuitMap.at(suit);
+
+    return os;
+
+};
+
+std::ostream& operator<< (std::ostream& os, Rank const rank){
+
+    os << RankMap.at(rank);
+
+    return os;
+
+};
 
 
 bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
