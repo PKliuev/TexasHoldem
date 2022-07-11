@@ -3,7 +3,7 @@
 int main(){
 
     Deck deck;
-    std::vector<Card> hand, comb;
+    std::vector<Card> hand, comb, remainder = {};
     std::vector<Card>::iterator iter;
 
     Card card1(Suit::Clubs,Rank::Ace);
@@ -35,9 +35,17 @@ int main(){
 
     std::cout << std::endl;
 
-    std::cout << check_flush(hand,comb) << std::endl;
+    std::cout << check_kind(hand, comb, remainder) << std::endl;
 
     for(iter = comb.begin(); iter != comb.end(); iter++){
+
+        std::cout << RankMap.at(iter->get_rank()) << " of " <<
+         SuitMap.at(iter->get_suit()) << std::endl;
+
+    }
+
+    std::cout << "remainder: \n";
+        for(iter = remainder.begin(); iter != remainder.end(); iter++){
 
         std::cout << RankMap.at(iter->get_rank()) << " of " <<
          SuitMap.at(iter->get_suit()) << std::endl;

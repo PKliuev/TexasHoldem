@@ -94,6 +94,14 @@ std::ostream& operator<< (std::ostream& os, Rank const rank){
 
 };
 
+std::ostream& operator<< (std::ostream& os, Hand const hand){
+
+    os << HandMap.at(hand);
+
+    return os;
+
+};
+
 
 bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
     
@@ -232,4 +240,77 @@ bool check_straight(const std::vector<Card> &pool, std::vector<Card> &hand){
 
 
 };
-   
+
+int check_kind(const std::vector<Card> &pool, std::vector<Card> &hand, std::vector<Card> &remainder) {
+
+    auto poolcpy = pool;
+    int cntr = 1;
+
+    sort(poolcpy.begin(), poolcpy.end(), compare_rank);
+    remainder = poolcpy;
+
+    auto it1 = poolcpy.begin();
+
+    hand.emplace_back(it1->get_suit(), it1->get_rank());
+
+    while( it1 != poolcpy.end()){
+
+        if(it1->get_rank() == (it1 + 1)->get_rank()){
+
+            cntr++;
+            hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+
+        }
+        else{
+
+            if(cntr > 1){
+                std::cout << "Cycle for 2\n";
+                
+                for (auto it2 = remainder.begin(); it2 != remainder.end(); it2++){
+
+                    if(it2->get_rank() == it1->get_rank()){
+
+                        remainder.erase(it2, it2 + hand.size());
+                        break;
+
+                    }
+
+                }
+
+                return cntr;
+
+            }
+            else{
+
+                hand.clear();
+                if(it1 + 1 != poolcpy.end()){
+
+                    hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+
+                }
+
+            }
+
+
+        }
+
+    it1++;
+
+    }
+    
+    if(cntr > 1){
+        for( auto it2 = hand.begin(); it2 != hand.end(); it2++ ){
+
+            for( auto it3 = remainder.begin(); it3 != remainder.end(); it3++ ){
+
+                if (it2->get_rank() == it3->get_rank() && it2->get_suit() == it3->get_suit()){
+
+                    remainder.erase(it3);
+
+                }
+            }
+        }
+    }
+    
+    return cntr;
+}
