@@ -63,6 +63,7 @@ class Card{
         Suit get_suit() const;
         Rank get_rank() const;
         Card(Suit suit, Rank rank);
+        bool operator==(const Card& other);
 };
 
 class Deck{
@@ -93,4 +94,5 @@ std::ostream& operator<< (std::ostream& os, Hand const hand);
 bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand); 
 bool check_straight(const std::vector<Card> &pool, std::vector<Card> &hand);
 int check_kind(const std::vector<Card> &pool, std::vector<Card> &hand, std::vector<Card> &remainder);
+Hand result_hand(const std::vector<Card> &pool, std::vector<Card> &hand);
 #endif

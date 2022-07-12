@@ -102,6 +102,11 @@ std::ostream& operator<< (std::ostream& os, Hand const hand){
 
 };
 
+bool Card::operator==(const Card& other){
+
+    return((this->get_rank() == other.get_rank()) && (this->get_suit() == other.get_suit()));
+
+};
 
 bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
     
@@ -241,76 +246,99 @@ bool check_straight(const std::vector<Card> &pool, std::vector<Card> &hand){
 
 };
 
+// returns the length of the largest sequence of the same rank cards in a pool, 
+// stores this sequence in "hand", given pool minus sequence - in "remainder"
+
 int check_kind(const std::vector<Card> &pool, std::vector<Card> &hand, std::vector<Card> &remainder) {
 
     auto poolcpy = pool;
-    int cntr = 1;
-
+    bool isIn;
     sort(poolcpy.begin(), poolcpy.end(), compare_rank);
-    remainder = poolcpy;
 
     auto it1 = poolcpy.begin();
 
-    hand.emplace_back(it1->get_suit(), it1->get_rank());
+    remainder.emplace_back(it1->get_suit(), it1->get_rank());
 
     while( it1 != poolcpy.end()){
 
-        if(it1->get_rank() == (it1 + 1)->get_rank()){
+        if( it1->get_rank() != (it1 + 1)->get_rank() ){
 
-            cntr++;
-            hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+            if(remainder.size() >= hand.size()){
+
+                hand = remainder;
+
+            }
+            
+            remainder.clear();
+        }
+        
+        remainder.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+        it1++;
+
+    }
+
+    remainder.clear();
+    it1 = poolcpy.begin();
+
+    while(it1 != poolcpy.end()){
+
+        isIn = 0;
+        for(auto it2 = hand.begin(); it2 != hand.end(); it2++){
+
+            if (*it1 == *it2){
+
+                isIn = 1;
+                break;
+
+            }
+
+        }; 
+
+        if(!isIn){
+
+            remainder.emplace_back(it1->get_suit(),it1->get_rank());
+
+        };
+
+        it1++;
+    };
+
+    return hand.size();
+}
+
+
+//not finished, check_kind needs rewriting
+Hand result_hand(const std::vector<Card> &pool, std::vector<Card> &hand){
+
+    bool flush = 0, straight = 0;
+    std::vector<Card> checkHand, remainder;
+    flush = check_flush(pool, checkHand);
+    if(!flush){
+
+        checkHand.clear();
+        straight = check_straight(pool, checkHand);
+
+    }
+    else{
+
+        straight = check_straight(checkHand, hand);
+
+    }
+
+    if(flush && straight){
+
+        if(hand.back().get_rank() == Rank::Ace){
+
+            return Hand::Royal_Flush;
 
         }
         else{
 
-            if(cntr > 1){
-                std::cout << "Cycle for 2\n";
-                
-                for (auto it2 = remainder.begin(); it2 != remainder.end(); it2++){
-
-                    if(it2->get_rank() == it1->get_rank()){
-
-                        remainder.erase(it2, it2 + hand.size());
-                        break;
-
-                    }
-
-                }
-
-                return cntr;
-
-            }
-            else{
-
-                hand.clear();
-                if(it1 + 1 != poolcpy.end()){
-
-                    hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
-
-                }
-
-            }
-
+            return Hand::Straight_Flush;
 
         }
 
-    it1++;
-
     }
-    
-    if(cntr > 1){
-        for( auto it2 = hand.begin(); it2 != hand.end(); it2++ ){
 
-            for( auto it3 = remainder.begin(); it3 != remainder.end(); it3++ ){
-
-                if (it2->get_rank() == it3->get_rank() && it2->get_suit() == it3->get_suit()){
-
-                    remainder.erase(it3);
-
-                }
-            }
-        }
-    }
-    
-    return cntr;
-}
+return Hand::High;
+};
