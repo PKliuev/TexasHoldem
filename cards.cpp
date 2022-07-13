@@ -122,7 +122,7 @@ bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
 
         if (it1->get_suit() == (it1 + 1)->get_suit()){
 
-            hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+            hand.emplace_back(*(it1 + 1));
             cntr++;
 
         }
@@ -143,7 +143,7 @@ bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand){
 
                 }
                 
-                hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+                hand.emplace_back(*(it1 + 1));
                 cntr = 1;
 
             }
@@ -199,7 +199,7 @@ bool check_straight(const std::vector<Card> &pool, std::vector<Card> &hand){
     
         if(static_cast<int>((it1+1)->get_rank()) - static_cast<int>(it1->get_rank()) <= 1){
 
-            hand.emplace_back((it1+1)->get_suit(),(it1+1)->get_rank());
+            hand.emplace_back(*(it1+1));
 
             if(static_cast<int>((it1+1)->get_rank()) - static_cast<int>(it1->get_rank()) == 1){
 
@@ -223,7 +223,7 @@ bool check_straight(const std::vector<Card> &pool, std::vector<Card> &hand){
                     return 0;
 
                 }
-                hand.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+                hand.emplace_back(*(it1 + 1));
                 cntr = 1;
 
             }
@@ -257,7 +257,7 @@ int check_kind(const std::vector<Card> &pool, std::vector<Card> &hand, std::vect
 
     auto it1 = poolcpy.begin();
 
-    remainder.emplace_back(it1->get_suit(), it1->get_rank());
+    remainder.emplace_back(*it1);
 
     while( it1 != poolcpy.end()){
 
@@ -272,7 +272,7 @@ int check_kind(const std::vector<Card> &pool, std::vector<Card> &hand, std::vect
             remainder.clear();
         }
         
-        remainder.emplace_back((it1 + 1)->get_suit(), (it1 + 1)->get_rank());
+        remainder.emplace_back(*(it1 + 1));
         it1++;
 
     }
@@ -310,35 +310,124 @@ int check_kind(const std::vector<Card> &pool, std::vector<Card> &hand, std::vect
 //not finished, check_kind needs rewriting
 Hand result_hand(const std::vector<Card> &pool, std::vector<Card> &hand){
 
-    bool flush = 0, straight = 0;
-    std::vector<Card> checkHand, remainder;
-    flush = check_flush(pool, checkHand);
-    if(!flush){
+bool straight = 0, flush = 0;
+int length1 = 0, length2 = 0;
+std::vector<Card> remainder, serv1, serv2, serv3;
 
-        checkHand.clear();
-        straight = check_straight(pool, checkHand);
+flush = check_flush(pool, hand);
+remainder = hand;
+hand.clear();
+if(flush){
+
+straight = check_straight(remainder, hand);
+
+}
+else{
+
+straight = check_straight(pool, hand);
+
+};
+
+remainder.clear();
+
+if(straight && flush){
+
+    if (hand.back().get_rank() == Rank::Ace){
+
+        return Hand::Royal_Flush;
 
     }
     else{
 
-        straight = check_straight(checkHand, hand);
+        return Hand::Straight_Flush;
 
     }
 
-    if(flush && straight){
+};
 
-        if(hand.back().get_rank() == Rank::Ace){
+length1 = check_kind(pool,serv1, remainder);
+length2 = check_kind(remainder, serv2, serv3);
 
-            return Hand::Royal_Flush;
+if(length1 == 4){
+
+
+
+};
+
+
+switch (length1){
+
+    case 4:
+
+        hand = serv1;
+        return Hand::Four;
+    
+    case 3:
+        if(length2 >= 2){
+
+            for(auto it1 = serv2.begin(); it1 != serv2.begin() + 2; it1++){
+
+            serv1.emplace_back((*it1));
+        
+            };
+
+            hand = serv1;
+            return Hand::Full;
 
         }
         else{
 
-            return Hand::Straight_Flush;
+            if (flush){
+
+                return Hand::Flush;
+
+            };
+            if(straight){
+
+                return Hand::Straight;
+            }
+
+            hand = serv1;
+            return Hand::Three;
 
         }
 
-    }
+        case 2:
+
+            if (flush){
+
+                return Hand::Flush;
+
+            };
+            if(straight){
+
+                return Hand::Straight;
+            };
+
+            hand = serv1;
+
+            if (length2 == 2){
+
+                for(auto it1 = serv2.begin(); it1 != serv2.begin() + 2; it1++){
+
+                    serv1.emplace_back((*it1));
+            
+                };
+
+                return Hand::Two;
+
+            }
+            
+            return Hand::Pair;
+
+            default:
+
+                hand = serv1;
+                return Hand::High;
+
+
+}
+
 
 return Hand::High;
 };
