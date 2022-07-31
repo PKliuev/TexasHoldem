@@ -1,10 +1,12 @@
 #include <iostream>
 #include "cards.h"
+#include "players.h"
 int main(){
 
     Deck deck;
     std::vector<Card> hand, comb, remainder = {};
     std::vector<Card>::iterator iter;
+    
 
     Card card1(Suit::Clubs,Rank::Ace);
     hand.push_back(card1);
@@ -30,5 +32,7 @@ int main(){
     }
     
     std::cout << result_hand(hand, comb) << std::endl;
+
+    getchar();
 
 }
