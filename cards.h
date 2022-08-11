@@ -1,11 +1,13 @@
 #pragma once
 #ifndef CARDS_H
 #define CARDS_H
-
+#define HAND_SIZE  5
+#define POOL_SIZE  7
 #include "libs.h"
 
 enum class Suit {Diamonds,Clubs,Hearts,Spades};
 enum class Rank {Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King};
+enum class Hand {High, Pair, Two, Three, Straight, Flush, Full, Four, Straight_Flush, Royal_Flush};
 
 
 const std::map<Suit,std::string> SuitMap { 
@@ -35,6 +37,22 @@ const std::map<Rank,std::string> RankMap{
 
 };
 
+const std::map<Hand,std::string> HandMap{
+
+    {Hand::High, "High card"},
+    {Hand::Pair, "Pair"},
+    {Hand::Two, "Two Pairs"},
+    {Hand::Three, "Three of a kind"},
+    {Hand::Straight, "Straight"},
+    {Hand::Flush, "Flush"},
+    {Hand::Full, "Full house"},
+    {Hand::Four, "Four of a kind"},
+    {Hand::Straight_Flush, "Straight_Flush"},
+    {Hand::Royal_Flush, "Royal_Flush"}
+
+
+};
+
 class Card{
 
     private:
@@ -45,6 +63,7 @@ class Card{
         Suit get_suit() const;
         Rank get_rank() const;
         Card(Suit suit, Rank rank);
+        bool operator==(const Card& other);
 };
 
 class Deck{
@@ -64,10 +83,16 @@ class Deck{
 void shuffle_deck(std::vector<Card> &deck);
 void show_deck(const std::vector<Card> &deck);
 
-bool compare_cards(Card card1, Card card2);
+bool compare_rank(Card card1, Card card2);
 
-void sort_hand(std::vector<Card> &hand);
+bool compare_suit(Card card1, Card card2);
 
-bool check_flush(const std::vector<Card> &pool); 
-bool check_straight(const std::vector<Card> &pool);
+std::ostream& operator<< (std::ostream& os, Suit const suit);
+std::ostream& operator<< (std::ostream& os, Rank const rank);
+std::ostream& operator<< (std::ostream& os, Hand const hand);
+
+bool check_flush(const std::vector<Card> &pool, std::vector<Card> &hand); 
+bool check_straight(const std::vector<Card> &pool, std::vector<Card> &hand);
+int check_kind(const std::vector<Card> &pool, std::vector<Card> &hand, std::vector<Card> &remainder);
+Hand result_hand(const std::vector<Card> &pool, std::vector<Card> &hand);
 #endif
